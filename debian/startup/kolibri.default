@@ -56,12 +56,22 @@ then
   done
 fi
 
-# Load user configuration
+# Load non-modular final configuration
 
 if [ -e /etc/kolibri/daemon.conf ]
 then
   . /etc/kolibri/daemon.conf
 fi
+
+
+# It should be possible to use "~/.kolibri" for a relative
+# path for Kolibri, but for various reasons, the finally
+# exported environment var should be absolute.
+#
+# Expands ~ in KOLIBRI_HOME to KOLIBRI_USER's HOME
+KOLIBRI_USER_HOME="$(getent passwd $KOLIBRI_USER | awk -F ':' '{print $6}')"
+KOLIBRI_HOME=${KOLIBRI_HOME//\~/"$KOLIBRI_USER_HOME"}
+
 
 # Switch off the allexport behavior
 set +o allexport
