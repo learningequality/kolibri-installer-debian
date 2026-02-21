@@ -122,11 +122,13 @@ SOURCE_DIR=`ls -d kolibri*/`
 cp -r ../debian $SOURCE_DIR
 DEB_VERSION=`cat VERSION | sed -s 's/^\+\.\+\.\+\([abc]\|\.dev\)/\~\0/g'`
 
+# use the environment variables if they are set:
+DEBFULLNAME="${DEBFULLNAME:-Learning Equality \(Learning Equality\'s public signing key\)}"
+DEBEMAIL="${DEBEMAIL:-accounts@learningequality.org>}"
+
 cd $SOURCE_DIR
-python3 ../../build_tools/generate_changelog.py \
-    --debian-changelog debian/changelog \
-    --version-file ../VERSION \
-    --packaging-changelog ../../CHANGELOG
+DEBFULLNAME=$DEBFULLNAME DEBEMAIL=$DEBEMAIL dch -b -v $DEB_VERSION-0ubuntu1 'New upstream release'
+DEBFULLNAME=$DEBFULLNAME DEBEMAIL=$DEBEMAIL dch -r 'New upstream release'
 
 # package can't be run from a virtualenv
 if [[ "$VIRTUAL_ENV" != "" ]]

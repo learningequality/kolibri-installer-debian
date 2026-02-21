@@ -47,18 +47,6 @@ make kolibri.deb
 
 This will build the debian file into the `dist` folder.
 
-### Running tests
-
-Install the project with test dependencies:
-```
-pip install -e ".[test]"
-```
-
-Then run:
-```
-python3 -m pytest tests/ -v
-```
-
 ### Building sources
 
 This is primarily used to build sources for uploading to launchpad to release to the PPA.
