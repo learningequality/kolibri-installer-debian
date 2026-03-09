@@ -1,0 +1,6 @@
+Archive: stable
+Component: main
+Origin: Learning Equality
+Label: Kolibri
+Architecture: arm64
+Description: Kolibri Debian repository

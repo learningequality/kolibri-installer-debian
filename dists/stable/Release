@@ -1,0 +1,47 @@
+Origin: Learning Equality
+Label: Kolibri
+Suite: stable
+Codename: stable
+Date: Mon, 09 Mar 2026 01:39:09 UTC
+Architectures: amd64 i386 arm64 armhf
+Components: main
+Description: Kolibri Debian repository
+MD5Sum:
+ e8ad45a3a007f21df6b7a42222f59740 1023 main/binary-amd64/Packages
+ 4fdc1a49399bb0986efb381f20633dcd 662 main/binary-amd64/Packages.gz
+ fae8cb959484667ce338f7b7716e2644 132 main/binary-amd64/Release
+ e8ad45a3a007f21df6b7a42222f59740 1023 main/binary-i386/Packages
+ 4fdc1a49399bb0986efb381f20633dcd 662 main/binary-i386/Packages.gz
+ c5429fc7d0a4653459b473ac8aa1e888 131 main/binary-i386/Release
+ e8ad45a3a007f21df6b7a42222f59740 1023 main/binary-arm64/Packages
+ 4fdc1a49399bb0986efb381f20633dcd 662 main/binary-arm64/Packages.gz
+ ca2684b450c4eb367a7085dd594951c3 132 main/binary-arm64/Release
+ e8ad45a3a007f21df6b7a42222f59740 1023 main/binary-armhf/Packages
+ 4fdc1a49399bb0986efb381f20633dcd 662 main/binary-armhf/Packages.gz
+ 0506cb94d3367e9ec74a9ecd3c8c9d90 132 main/binary-armhf/Release
+SHA1:
+ 6ce4cb18cca6c9a3bd08b40fa4ddb6d8b104097b 1023 main/binary-amd64/Packages
+ 9f9f87f393880966d51cd86b82d712e7717a480d 662 main/binary-amd64/Packages.gz
+ 1beb4e571b81cf00ebe7e45ab85bfec78db31857 132 main/binary-amd64/Release
+ 6ce4cb18cca6c9a3bd08b40fa4ddb6d8b104097b 1023 main/binary-i386/Packages
+ 9f9f87f393880966d51cd86b82d712e7717a480d 662 main/binary-i386/Packages.gz
+ fffdf9059643757387a348d12cc51a44d5a4317a 131 main/binary-i386/Release
+ 6ce4cb18cca6c9a3bd08b40fa4ddb6d8b104097b 1023 main/binary-arm64/Packages
+ 9f9f87f393880966d51cd86b82d712e7717a480d 662 main/binary-arm64/Packages.gz
+ 82d66add0139ed7be0070a589a42edc662af7133 132 main/binary-arm64/Release
+ 6ce4cb18cca6c9a3bd08b40fa4ddb6d8b104097b 1023 main/binary-armhf/Packages
+ 9f9f87f393880966d51cd86b82d712e7717a480d 662 main/binary-armhf/Packages.gz
+ 415fb02c022292bf3c626055e86966fd1d838ead 132 main/binary-armhf/Release
+SHA256:
+ 34396dad219ba60352e129703b1cd75c4084e88b23104e23653f50f31bd24f05 1023 main/binary-amd64/Packages
+ 5e9acce6fd48bbe7da5bbadadefcb50a9b65f28e80a74717fcb299848c77973a 662 main/binary-amd64/Packages.gz
+ aad44a5c3b4fa10523c10c07606d70b29610431f559c150b2139c44b6161e8cc 132 main/binary-amd64/Release
+ 34396dad219ba60352e129703b1cd75c4084e88b23104e23653f50f31bd24f05 1023 main/binary-i386/Packages
+ 5e9acce6fd48bbe7da5bbadadefcb50a9b65f28e80a74717fcb299848c77973a 662 main/binary-i386/Packages.gz
+ 93d7f4f9a6e1cab02133338e24496cc6633d1e6f0179f1362d80ac8a7b2e3287 131 main/binary-i386/Release
+ 34396dad219ba60352e129703b1cd75c4084e88b23104e23653f50f31bd24f05 1023 main/binary-arm64/Packages
+ 5e9acce6fd48bbe7da5bbadadefcb50a9b65f28e80a74717fcb299848c77973a 662 main/binary-arm64/Packages.gz
+ 50a7c9d0fe57cadfc46d455b49f34b31a16473799fdbe665a0e9b6769948b7f5 132 main/binary-arm64/Release
+ 34396dad219ba60352e129703b1cd75c4084e88b23104e23653f50f31bd24f05 1023 main/binary-armhf/Packages
+ 5e9acce6fd48bbe7da5bbadadefcb50a9b65f28e80a74717fcb299848c77973a 662 main/binary-armhf/Packages.gz
+ 2ee7f9a3b56873241f08be00425144ff92a0a5817b150c5478bfcc17ce5d81c2 132 main/binary-armhf/Release
