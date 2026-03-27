@@ -282,6 +282,11 @@ kolibri_configure()
         echo -n "$KOLIBRI_USER" > /etc/kolibri/username
     fi
 
+    add_state "after_postinst"
+
+    # Service registration is last so that all configuration is complete
+    # even if these steps fail (e.g. in containers without systemd).
+
     # Remove because we might re-register as systemd during an upgrade
     update-rc.d -f kolibri remove
 
@@ -303,8 +308,6 @@ kolibri_configure()
             invoke-rc.d kolibri start || true
         fi
     fi
-
-    add_state "after_postinst"
 
 }
 
