@@ -1,0 +1,66 @@
+name: Install smoke test
+
+on:
+  workflow_call:
+    inputs:
+      deb-file-name:
+        description: "Artifact name of the .deb file to test"
+        required: true
+        type: string
+
+jobs:
+  install_test:
+    name: Install test (${{ matrix.image }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        image:
+          - ubuntu:16.04
+          - ubuntu:18.04
+          - ubuntu:20.04
+          - ubuntu:22.04
+          - ubuntu:24.04
+    steps:
+      - name: Download .deb artifact
+        uses: actions/download-artifact@v7
+        with:
+          name: ${{ inputs.deb-file-name }}
+          path: /tmp/deb
+
+      - name: Run install test in Docker
+        run: |
+          docker run --rm \
+            -v /tmp/deb:/tmp/deb \
+            -e DEBIAN_FRONTEND=noninteractive \
+            -e TZ=UTC \
+            ${{ matrix.image }} \
+            bash -c '
+              set -e
+
+              # Install minimal dependencies
+              apt-get update -qq
+              apt-get install -y -qq curl adduser python3 2>/dev/null || apt-get install -y -qq curl adduser
+
+              # Install the .deb — service start may fail in containers but
+              # all configuration completes before that step
+              dpkg -i /tmp/deb/*.deb 2>&1 || true
+              apt-get install -f -y 2>&1 || true
+              dpkg --configure -a 2>&1 || true
+
+              # Start kolibri — verifies the wrapper is on PATH and works
+              KOLIBRI_USER=$(cat /etc/kolibri/username 2>/dev/null || echo "kolibri")
+              su -s /bin/sh "$KOLIBRI_USER" -c "kolibri start"
+
+              # Wait for Kolibri to become available
+              echo "Waiting for Kolibri to start on port 8080..."
+              for i in $(seq 1 60); do
+                if curl -s --max-time 5 -o /dev/null -w "%{http_code}" http://localhost:8080 | grep -q "200\|302"; then
+                  echo "PASS: Kolibri is responding on port 8080 (attempt $i)"
+                  exit 0
+                fi
+                sleep 2
+              done
+              echo "FAIL: Kolibri did not respond on port 8080 within 120 seconds"
+              exit 1
+            '
