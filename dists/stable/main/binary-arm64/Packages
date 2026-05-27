@@ -1,0 +1,28 @@
+Package: kolibri
+Source: kolibri-source
+Version: 0.19.4-0ubuntu1
+Architecture: all
+Maintainer: José L. Redrejo Rodríguez <jredrejo@debian.org>
+Installed-Size: 251307
+Depends: python3 (>= 3.6), python3-pkg-resources, adduser
+Recommends: python3-cryptography (>= 1.2.3)
+Homepage: https://learningequality.org/kolibri
+Priority: optional
+Section: education
+Filename: pool/main/k/kolibri-source/kolibri_0.19.4-0ubuntu1_all.deb
+Size: 98608742
+SHA256: 3d145c5d55f1b0cfa9cba85146a435959f96323e7b1742de8220fbf8375ba185
+SHA1: 6d02ec07a64a3094cae8e8d330942b3348acd895
+MD5sum: 957f7d8c6acab0e07996b8aa3698ce54
+Description: The offline app for universal education
+ An educational platform for learners of all ages.
+ .
+ Retrieve and Distribute Open Educational Resources (OER) from online
+ resources or from device to device.
+ .
+ Resources are shared as 'channels', amongst which can be found
+ Khan Academy, PhET and CK-12.
+ .
+ To find more channels and create your own, please visit
+ our website: http://studio.learningequality.org/
+

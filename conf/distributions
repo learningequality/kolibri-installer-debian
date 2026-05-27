@@ -1,0 +1,8 @@
+Origin: Learning Equality
+Label: Kolibri
+Suite: stable
+Codename: stable
+Architectures: amd64 i386 arm64 armhf
+Components: main
+Description: Kolibri Debian repository
+SignWith: 09F1D39F8CED902149EC813D18AD27BE8CD329A2
