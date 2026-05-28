@@ -120,6 +120,17 @@ tar xf *orig.tar.gz
 # SOURCE_DIR=`tar --exclude="*/*" -tf *.orig.tar.gz|head -1`
 SOURCE_DIR=`ls -d kolibri*/`
 cp -r ../debian $SOURCE_DIR
+
+# Copy bundled Python tarballs and config into source tree if present
+for tarball in ../build_src/cpython-*-linux-gnu-install_only_stripped.tar.gz; do
+    if [ -f "$tarball" ]; then
+        cp "$tarball" "$SOURCE_DIR/"
+    fi
+done
+if [ -f ../build_tools/python_versions.env ]; then
+    cp ../build_tools/python_versions.env "$SOURCE_DIR/"
+fi
+
 # Convert to Debian version format so this matches the filename dpkg-buildpackage
 # produces from the generated changelog (version_to_debian in generate_changelog.py).
 DEB_VERSION=`cat VERSION | sed 's/-\(alpha\|beta\|rc\)/~\1/g' | sed 's/\.dev/~dev/g'`

@@ -50,3 +50,11 @@ jobs:
     uses: ./.github/workflows/build_deb.yml
     with:
       tar-url: ${{ needs.latest_kolibri_release.outputs.tar-url }}
+
+  install_test:
+    name: Install smoke tests
+    needs: [pre_job, build_deb]
+    if: ${{ needs.pre_job.outputs.should_skip != 'true' }}
+    uses: ./.github/workflows/install_test.yml
+    with:
+      deb-file-name: ${{ needs.build_deb.outputs.deb-file-name }}
