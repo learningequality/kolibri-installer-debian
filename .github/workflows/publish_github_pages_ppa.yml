@@ -1,0 +1,165 @@
+name: Publish to GitHub Pages PPA
+
+on:
+  workflow_dispatch:
+    inputs:
+      deb-url:
+        description: 'URL to download a .deb file'
+        required: true
+      debian-repo-signing-key-id:
+        description: 'Debian repo signing key ID (falls back to vars.DEBIAN_REPO_SIGNING_KEY_ID)'
+        required: false
+  workflow_call:
+    inputs:
+      deb-file-name:
+        description: 'Artifact name of the .deb file (from build workflow)'
+        required: false
+        type: string
+      deb-url:
+        description: 'URL to download a .deb file'
+        required: false
+        type: string
+      debian-repo-signing-key-id:
+        description: 'Debian repo signing key ID (falls back to vars.DEBIAN_REPO_SIGNING_KEY_ID)'
+        required: false
+        type: string
+    secrets:
+      DEBIAN_REPO_SIGNING_KEY:
+        required: true
+      LE_BOT_APP_ID:
+        required: true
+      LE_BOT_PRIVATE_KEY:
+        required: true
+
+jobs:
+  publish_github_pages_ppa:
+    name: Publish to prerelease suite
+    runs-on: ubuntu-latest
+    concurrency:
+      group: debian-repo-publish
+      cancel-in-progress: false
+    steps:
+      - name: Install dependencies
+        run: sudo apt-get update && sudo apt-get install -y reprepro
+
+      - name: Set GPG key ID
+        id: gpg
+        run: |
+          GPG_KEY_ID="${{ inputs.debian-repo-signing-key-id || vars.DEBIAN_REPO_SIGNING_KEY_ID }}"
+          if [ -z "$GPG_KEY_ID" ]; then
+            echo "::error::No signing key ID provided (set input or vars.DEBIAN_REPO_SIGNING_KEY_ID)"
+            exit 1
+          fi
+          echo "key-id=$GPG_KEY_ID" >> "$GITHUB_OUTPUT"
+
+      - name: Import GPG signing key into isolated keyring
+        env:
+          DEBIAN_REPO_SIGNING_KEY: ${{ secrets.DEBIAN_REPO_SIGNING_KEY }}
+        run: |
+          GNUPGHOME=$(mktemp -d)
+          export GNUPGHOME
+          echo "GNUPGHOME=$GNUPGHOME" >> "$GITHUB_ENV"
+          echo "pinentry-mode loopback" > "$GNUPGHOME/gpg.conf"
+          echo "allow-loopback-pinentry" > "$GNUPGHOME/gpg-agent.conf"
+          echo "$DEBIAN_REPO_SIGNING_KEY" | gpg --batch --import
+          echo "${{ steps.gpg.outputs.key-id }}:6:" | gpg --batch --import-ownertrust
+          gpgconf --kill gpg-agent
+
+      - name: Generate GitHub token
+        id: generate-token
+        uses: actions/create-github-app-token@v3
+        with:
+          app-id: ${{ secrets.LE_BOT_APP_ID }}
+          private-key: ${{ secrets.LE_BOT_PRIVATE_KEY }}
+          owner: learningequality
+          repositories: kolibri-installer-debian
+
+      - name: Restore existing gh-pages repo state
+        id: restore-gh-pages
+        uses: actions/checkout@v6
+        continue-on-error: true
+        with:
+          ref: gh-pages
+          path: repo
+          fetch-depth: 1
+          token: ${{ steps.generate-token.outputs.token }}
+
+      - name: Initialize repo directory on first run
+        if: steps.restore-gh-pages.outcome != 'success'
+        run: mkdir -p repo
+
+      - name: Validate .deb source
+        run: |
+          if [ -z "${{ inputs.deb-file-name }}" ] && [ -z "${{ inputs.deb-url }}" ]; then
+            echo "::error::Either deb-file-name or deb-url must be provided"
+            exit 1
+          fi
+
+      - name: Download .deb from artifact
+        if: inputs.deb-file-name
+        uses: actions/download-artifact@v8
+        with:
+          name: ${{ inputs.deb-file-name }}
+          path: incoming
+
+      - name: Download .deb from URL
+        if: inputs.deb-url
+        env:
+          DEB_URL: ${{ inputs.deb-url }}
+        run: |
+          mkdir -p incoming
+          wget -P incoming/ "$DEB_URL"
+
+      - name: Identify .deb file
+        id: deb
+        run: |
+          DEB_FILE=$(ls incoming/*.deb 2>/dev/null | head -1)
+          if [ -z "$DEB_FILE" ]; then
+            echo "::error::No .deb file found in incoming/"
+            exit 1
+          fi
+          echo "path=$DEB_FILE" >> "$GITHUB_OUTPUT"
+          echo "Found: $DEB_FILE ($(du -h "$DEB_FILE" | cut -f1))"
+
+      - name: Build repository with reprepro
+        run: |
+          mkdir -p repo/conf
+          cat > repo/conf/distributions <<EOF
+          Origin: Learning Equality
+          Label: Kolibri
+          Suite: stable
+          Codename: stable
+          Architectures: amd64 i386 arm64 armhf
+          Components: main
+          Description: Kolibri stable Debian repository
+          SignWith: ${{ steps.gpg.outputs.key-id }}
+
+          Origin: Learning Equality
+          Label: Kolibri
+          Suite: prerelease
+          Codename: prerelease
+          Architectures: amd64 i386 arm64 armhf
+          Components: main
+          Description: Kolibri prerelease Debian repository
+          SignWith: ${{ steps.gpg.outputs.key-id }}
+          EOF
+
+          reprepro -b repo remove prerelease kolibri || true
+          reprepro -b repo includedeb prerelease "${{ steps.deb.outputs.path }}"
+          reprepro -b repo deleteunreferenced
+          gpg --armor --export "${{ steps.gpg.outputs.key-id }}" > repo/pubkey.asc
+
+      - name: Deploy to GitHub Pages
+        env:
+          TOKEN: ${{ steps.generate-token.outputs.token }}
+        run: |
+          cd repo
+          rm -rf .git
+          git init
+          git checkout -b gh-pages
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add .
+          git commit -m "Publish prerelease to Debian repository"
+          git remote add origin "https://x-access-token:$TOKEN@github.com/learningequality/kolibri-installer-debian.git"
+          git push --force origin gh-pages
