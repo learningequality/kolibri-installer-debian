@@ -53,15 +53,13 @@ jobs:
           echo "key-id=$GPG_KEY_ID" >> "$GITHUB_OUTPUT"
 
       - name: Import GPG signing key into isolated keyring
-        env:
-          DEBIAN_REPO_SIGNING_KEY: ${{ secrets.DEBIAN_REPO_SIGNING_KEY }}
         run: |
           GNUPGHOME=$(mktemp -d)
           export GNUPGHOME
           echo "GNUPGHOME=$GNUPGHOME" >> "$GITHUB_ENV"
           echo "pinentry-mode loopback" > "$GNUPGHOME/gpg.conf"
           echo "allow-loopback-pinentry" > "$GNUPGHOME/gpg-agent.conf"
-          echo "$DEBIAN_REPO_SIGNING_KEY" | gpg --batch --import
+          echo "${{ secrets.DEBIAN_REPO_SIGNING_KEY }}" | gpg --batch --import
           echo "${{ steps.gpg.outputs.key-id }}:6:" | gpg --batch --import-ownertrust
           gpgconf --kill gpg-agent
 
