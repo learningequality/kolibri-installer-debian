@@ -1,4 +1,4 @@
-name: Release PPA
+name: Release Launchpad PPA
 
 on:
   workflow_dispatch:
