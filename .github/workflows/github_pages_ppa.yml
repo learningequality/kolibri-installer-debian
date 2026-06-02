@@ -1,9 +1,32 @@
-name: Promote to stable GitHub Pages PPA
+name: GitHub Pages PPA
 
 on:
   workflow_dispatch:
+    inputs:
+      action:
+        description: '"publish" adds a .deb to the prerelease suite; "promote" copies prerelease→stable'
+        required: true
+        type: choice
+        options:
+          - publish
+          - promote
+      deb-url:
+        description: 'URL to download a .deb file (required when action is publish)'
+        required: false
   workflow_call:
     inputs:
+      action:
+        description: '"publish" adds a .deb to prerelease; "promote" copies prerelease→stable'
+        required: true
+        type: string
+      deb-file-name:
+        description: 'Artifact name of the .deb file (for publish)'
+        required: false
+        type: string
+      deb-url:
+        description: 'URL to download a .deb file (for publish)'
+        required: false
+        type: string
       debian-repo-signing-key-id:
         description: 'Debian repo signing key ID (falls back to vars.DEBIAN_REPO_SIGNING_KEY_ID)'
         required: false
@@ -17,8 +40,8 @@ on:
         required: true
 
 jobs:
-  promote_to_stable:
-    name: Promote prerelease to stable
+  github_pages_ppa:
+    name: ${{ inputs.action == 'promote' && 'Promote prerelease to stable' || 'Publish to prerelease suite' }}
     runs-on: ubuntu-latest
     concurrency:
       group: debian-repo-publish
@@ -58,14 +81,53 @@ jobs:
           repositories: kolibri-installer-debian
 
       - name: Restore existing gh-pages repo state
-        env:
-          TOKEN: ${{ steps.generate-token.outputs.token }}
-        run: |
-          git clone --branch gh-pages --single-branch --depth 1 \
-            "https://x-access-token:$TOKEN@github.com/learningequality/kolibri-installer-debian.git" repo \
-            || { echo "::error::No gh-pages branch found; nothing staged to promote"; exit 1; }
+        id: restore-gh-pages
+        uses: actions/checkout@v6
+        continue-on-error: true
+        with:
+          ref: gh-pages
+          path: repo
+          fetch-depth: 1
+          token: ${{ steps.generate-token.outputs.token }}
 
-      - name: Recreate distributions config
+      - name: Fail if gh-pages does not exist (nothing staged to promote)
+        if: inputs.action == 'promote' && steps.restore-gh-pages.outcome != 'success'
+        run: |
+          echo "::error::No gh-pages branch found; nothing staged to promote"
+          exit 1
+
+      - name: Initialize repo directory (first publish run before gh-pages exists)
+        if: inputs.action != 'promote' && steps.restore-gh-pages.outcome != 'success'
+        run: mkdir -p repo
+
+      - name: Download .deb from artifact
+        if: inputs.action == 'publish' && inputs.deb-file-name
+        uses: actions/download-artifact@v8
+        with:
+          name: ${{ inputs.deb-file-name }}
+          path: incoming
+
+      - name: Download .deb from URL
+        if: inputs.action == 'publish' && inputs.deb-url
+        env:
+          DEB_URL: ${{ inputs.deb-url }}
+        run: |
+          mkdir -p incoming
+          wget -P incoming/ "$DEB_URL"
+
+      - name: Identify .deb file
+        id: deb
+        if: inputs.action == 'publish'
+        run: |
+          DEB_FILE=$(ls incoming/*.deb 2>/dev/null | head -1)
+          if [ -z "$DEB_FILE" ]; then
+            echo "::error::No .deb file found in incoming/"
+            exit 1
+          fi
+          echo "path=$DEB_FILE" >> "$GITHUB_OUTPUT"
+          echo "Found: $DEB_FILE ($(du -h "$DEB_FILE" | cut -f1))"
+
+      - name: Write distributions config
         run: |
           mkdir -p repo/conf
           cat > repo/conf/distributions <<EOF
@@ -88,7 +150,16 @@ jobs:
           SignWith: ${{ steps.gpg.outputs.key-id }}
           EOF
 
+      - name: Publish to prerelease suite
+        if: inputs.action == 'publish'
+        run: |
+          reprepro -b repo remove prerelease kolibri || true
+          reprepro -b repo includedeb prerelease "${{ steps.deb.outputs.path }}"
+          reprepro -b repo deleteunreferenced
+          gpg --armor --export "${{ steps.gpg.outputs.key-id }}" > repo/pubkey.asc
+
       - name: Promote prerelease to stable
+        if: inputs.action == 'promote'
         run: |
           if ! reprepro -b repo list prerelease | grep -q kolibri; then
             echo "::error::No kolibri package in prerelease suite; publish a prerelease first"
@@ -110,6 +181,6 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add .
-          git commit -m "Promote prerelease to stable in Debian repository"
+          git commit -m "${{ inputs.action == 'promote' && 'Promote prerelease to stable in Debian repository' || 'Publish prerelease to Debian repository' }}"
           git remote add origin "https://x-access-token:$TOKEN@github.com/learningequality/kolibri-installer-debian.git"
           git push --force origin gh-pages
