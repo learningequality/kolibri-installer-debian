@@ -4,6 +4,46 @@ To install and subscribe to updates for Debian/Ubuntu/Raspbian, visit our PPA:
 
 [https://launchpad.net/~learningequality/+archive/ubuntu/kolibri](https://launchpad.net/~learningequality/+archive/ubuntu/kolibri)
 
+## Self-hosted Debian repository
+
+In addition to the Launchpad PPA, Kolibri is available from a self-hosted
+Debian repository published to GitHub Pages. This repository is independent
+of Launchpad and offers two suites:
+
+- **stable** — promoted releases only
+- **prerelease** — alpha/beta/rc builds, published within minutes of a build
+
+### Adding the repository
+
+Download and trust the signing key:
+
+```
+curl -fsSL https://learningequality.github.io/kolibri-installer-debian/pubkey.asc \
+  | sudo tee /usr/share/keyrings/kolibri-debian-keyring.asc > /dev/null
+```
+
+### Installing from the stable suite
+
+```
+echo "deb [signed-by=/usr/share/keyrings/kolibri-debian-keyring.asc] https://learningequality.github.io/kolibri-installer-debian stable main" \
+  | sudo tee /etc/apt/sources.list.d/kolibri.list
+sudo apt update
+sudo apt install kolibri
+```
+
+### Installing from the prerelease suite
+
+```
+echo "deb [signed-by=/usr/share/keyrings/kolibri-debian-keyring.asc] https://learningequality.github.io/kolibri-installer-debian prerelease main" \
+  | sudo tee /etc/apt/sources.list.d/kolibri-prerelease.list
+sudo apt update
+sudo apt install kolibri
+```
+
+> **Note:** Only the most recent version is kept in each suite. To switch
+> from `prerelease` to `stable`, replace the sources entry and run
+> `sudo apt update && sudo apt install kolibri`.
+
 ## Development roadmap
 
 Decisions (some pending):
