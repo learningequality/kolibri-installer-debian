@@ -1,0 +1,66 @@
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA512
+
+Origin: Learning Equality
+Label: Kolibri
+Suite: stable
+Codename: stable
+Date: Tue, 14 Jul 2026 14:50:02 UTC
+Architectures: amd64 i386 arm64 armhf
+Components: main
+Description: Kolibri Debian repository
+MD5Sum:
+ c5f8f4f64f6a37c7cfd736ec9e24bd6c 1023 main/binary-amd64/Packages
+ b63e7929b38810efaae652e3a93267f3 660 main/binary-amd64/Packages.gz
+ fae8cb959484667ce338f7b7716e2644 132 main/binary-amd64/Release
+ c5f8f4f64f6a37c7cfd736ec9e24bd6c 1023 main/binary-i386/Packages
+ b63e7929b38810efaae652e3a93267f3 660 main/binary-i386/Packages.gz
+ c5429fc7d0a4653459b473ac8aa1e888 131 main/binary-i386/Release
+ c5f8f4f64f6a37c7cfd736ec9e24bd6c 1023 main/binary-arm64/Packages
+ b63e7929b38810efaae652e3a93267f3 660 main/binary-arm64/Packages.gz
+ ca2684b450c4eb367a7085dd594951c3 132 main/binary-arm64/Release
+ c5f8f4f64f6a37c7cfd736ec9e24bd6c 1023 main/binary-armhf/Packages
+ b63e7929b38810efaae652e3a93267f3 660 main/binary-armhf/Packages.gz
+ 0506cb94d3367e9ec74a9ecd3c8c9d90 132 main/binary-armhf/Release
+SHA1:
+ 4a3650ca7aed1b6d6016feaf025bb27b217c306f 1023 main/binary-amd64/Packages
+ 1d5334853d07aba37bb5f8abf2fd3b5bb24db0b9 660 main/binary-amd64/Packages.gz
+ 1beb4e571b81cf00ebe7e45ab85bfec78db31857 132 main/binary-amd64/Release
+ 4a3650ca7aed1b6d6016feaf025bb27b217c306f 1023 main/binary-i386/Packages
+ 1d5334853d07aba37bb5f8abf2fd3b5bb24db0b9 660 main/binary-i386/Packages.gz
+ fffdf9059643757387a348d12cc51a44d5a4317a 131 main/binary-i386/Release
+ 4a3650ca7aed1b6d6016feaf025bb27b217c306f 1023 main/binary-arm64/Packages
+ 1d5334853d07aba37bb5f8abf2fd3b5bb24db0b9 660 main/binary-arm64/Packages.gz
+ 82d66add0139ed7be0070a589a42edc662af7133 132 main/binary-arm64/Release
+ 4a3650ca7aed1b6d6016feaf025bb27b217c306f 1023 main/binary-armhf/Packages
+ 1d5334853d07aba37bb5f8abf2fd3b5bb24db0b9 660 main/binary-armhf/Packages.gz
+ 415fb02c022292bf3c626055e86966fd1d838ead 132 main/binary-armhf/Release
+SHA256:
+ f17c8ddb4add0cdfc6dd83e408f48d33cddc468cd511abf037a420895e51d694 1023 main/binary-amd64/Packages
+ 9abd36e0fc416525cf8a6092ff707f207288e671d928a4eae6d21815d24ac57f 660 main/binary-amd64/Packages.gz
+ aad44a5c3b4fa10523c10c07606d70b29610431f559c150b2139c44b6161e8cc 132 main/binary-amd64/Release
+ f17c8ddb4add0cdfc6dd83e408f48d33cddc468cd511abf037a420895e51d694 1023 main/binary-i386/Packages
+ 9abd36e0fc416525cf8a6092ff707f207288e671d928a4eae6d21815d24ac57f 660 main/binary-i386/Packages.gz
+ 93d7f4f9a6e1cab02133338e24496cc6633d1e6f0179f1362d80ac8a7b2e3287 131 main/binary-i386/Release
+ f17c8ddb4add0cdfc6dd83e408f48d33cddc468cd511abf037a420895e51d694 1023 main/binary-arm64/Packages
+ 9abd36e0fc416525cf8a6092ff707f207288e671d928a4eae6d21815d24ac57f 660 main/binary-arm64/Packages.gz
+ 50a7c9d0fe57cadfc46d455b49f34b31a16473799fdbe665a0e9b6769948b7f5 132 main/binary-arm64/Release
+ f17c8ddb4add0cdfc6dd83e408f48d33cddc468cd511abf037a420895e51d694 1023 main/binary-armhf/Packages
+ 9abd36e0fc416525cf8a6092ff707f207288e671d928a4eae6d21815d24ac57f 660 main/binary-armhf/Packages.gz
+ 2ee7f9a3b56873241f08be00425144ff92a0a5817b150c5478bfcc17ce5d81c2 132 main/binary-armhf/Release
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCgAdFiEECfHTn4ztkCFJ7IE9GK0nvozTKaIFAmpWTJoACgkQGK0nvozT
+KaJjgw//XLvOBrCSvNhta9HqKLMA5hMUnvg+Ui8HGKAKSnLIYOkGfNdcXwLvY1Ch
+188I+7N4W5Y28DTMad6K+bdzs2P6DbAllAVFOkSsv1MH81RlNZT5HP2mCX7GVKAt
+oIPJg/p9g0OhpX9BMNd5E0twPvFr2nlYJPn6UgFiiOuqC5EZgIwLbVkBOe4TBBHU
+476tsocTv8h/3No/q2ffQ0NcCC5Hc9TdiWl3NaZU4GMmwpEK54iCD5RXEZg5YJrF
+pjqj4b4rPR1g6BPggFETY2cblfPCcQvuc9UbUk+KggwKbmVEwgPT/ZemaPmbrIqG
++VyyxhIsLfGgxqDyPNIcvooOGVkGWwmuRAhO7oYkTuIrCubbYgHgdvqtHMrm8X0+
+M3XwBL90lnMERExB5Yu1amh5fFdSgRYvR3wqrIxwpT+raukh6lrME1CSlnYb2pm8
+uQKxub3l6ionlrMmTpOiYncooRXeo/94rZRUxVhBSsMEqMJsxxUMpMLdlaYkWm86
+XNzMqqzzkLJJgCWACHxxmp1lRYp4UqvAiJtc9GOAjHW0BZEw+DHsu/+TrAT+cYWM
+BMCwCKRwQdd+LkYw+M3fXZP9bzjA1NXWnudJr21omkcZx8BG7FFrX7F+xzpXYxrS
+puezSZZIJ7N/V5sItSh/HiKz40YXYEyW0nBvPW9wVI80ROeff84=
+=Bo2+
+-----END PGP SIGNATURE-----
