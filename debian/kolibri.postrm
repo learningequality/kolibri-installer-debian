@@ -11,6 +11,13 @@ then
 
     kolibri_purge
 
+    # Clean up bundled and installed Python
+    rm -rf /opt/kolibri/python
+    rm -rf /opt/kolibri/bundled
+    # Remove /opt/kolibri if empty
+    rmdir /opt/kolibri/bin 2>/dev/null || true
+    rmdir /opt/kolibri 2>/dev/null || true
+
 fi
 
 

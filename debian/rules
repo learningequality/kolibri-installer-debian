@@ -35,6 +35,18 @@ override_dh_auto_install:
 	install -D -m0644 debian/startup/kolibri.default $(CURDIR)/debian/kolibri/etc/default/kolibri
 	install -D -m0644 debian/README.etc $(CURDIR)/debian/kolibri/etc/kolibri/README
 	install -D -m0644 debian/startup/kolibri.service $(CURDIR)/debian/kolibri/lib/systemd/system/kolibri.service
+	# Wrapper resolves bundled vs system Python at runtime; setuptools entry point is static
+	install -m0755 debian/kolibri-wrapper.sh $(CURDIR)/debian/kolibri/usr/bin/kolibri
+	# Install bundled Python artifacts
+	install -D -m0755 debian/install-python.sh $(CURDIR)/debian/kolibri/opt/kolibri/bin/install-python.sh
+	if [ -f python_versions.env ]; then \
+		install -D -m0644 python_versions.env $(CURDIR)/debian/kolibri/opt/kolibri/bundled/python_versions.env; \
+	fi
+	for tarball in cpython-*-linux-gnu-install_only_stripped.tar.gz; do \
+		if [ -f "$$tarball" ]; then \
+			install -D -m0644 "$$tarball" "$(CURDIR)/debian/kolibri/opt/kolibri/bundled/$$tarball"; \
+		fi; \
+	done
 	# remove py2only:
 	rm -Rf $(CURDIR)/debian/kolibri/usr/lib/python3/dist-packages/kolibri/dist/py2only
 	# remove C extensions for other platforms:
