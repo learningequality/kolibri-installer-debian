@@ -1,3 +1,5 @@
+# This repository is deprecated! The Debian package has been moved to the [Kolibri monorepo](https://github.com/learningequality/kolibri/tree/develop/platforms/debian)
+
 # Kolibri installer source for Debian
 
 To install and subscribe to updates for Debian/Ubuntu/Raspbian, visit our PPA:
